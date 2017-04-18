@@ -3,10 +3,12 @@ package com.sandman.service;
 import com.sandman.domain.Post;
 import com.sandman.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
+
 import java.util.List;
 
 /**
@@ -20,8 +22,8 @@ public class PostServiceImpl implements PostService {
     private PostRepository postRepository;
 
     @Override
-    public Iterable<Post> findAllPosts(Pageable pageable) {
-        return postRepository.findAll();
+    public Page<Post> findAllPosts(Pageable pageable) {
+        return postRepository.findAll(pageable);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.sandman.service;
 
 import com.sandman.domain.Post;
-
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
 /**
@@ -10,7 +10,7 @@ import java.awt.print.Pageable;
  */
 public interface PostService {
 
-    Iterable<Post> findAllPosts(Pageable pageable);
+    Page<Post> findAllPosts(Pageable pageable);
 
     Post findByKey(long postKey);
 

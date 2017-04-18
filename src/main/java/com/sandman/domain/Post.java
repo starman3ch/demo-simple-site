@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Created by lch131 on 2017. 4. 18..
@@ -22,9 +24,13 @@ public class Post {
     @Column(name = "post_key", nullable = false)
     private long postKey;
 
+    @NotNull
+    @Size(min = 1, max = 125)
     @Column(name = "title", nullable = false)
     private String title;
 
+    @NotNull
+    @Size(min = 1)
     @Column(name = "post_body")
     private String postBody;
 

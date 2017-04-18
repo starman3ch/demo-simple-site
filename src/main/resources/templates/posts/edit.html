@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>글쓰기</title>
+</head>
+<body>
+    <form th:action="@{/posts/write}" th:object="${postForm}" method="post">
+        <dl>
+            <dt><label for="title">제목</label></dt>
+            <dd>
+                <input type="text" id="title" name="title" th:field="*{title}" th:errorclass="error-input" value="제목이다"/>
+                <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="error-messages">error!</span>
+            </dd>
+            <dt><label for="postbody">글 내용</label></dt>
+            <dd>
+                <input type="text" id="postbody" name="title" th:field="*{postbody}" th:errorclass="error-input"/>
+                <span th:if="${#fields.hasErrors('postbody')}" th:errors="*{postbody}" class="error-messages">error!</span>
+            </dd>
+        </dl>
+        <input type="submit" name="goToList" value="목록으로" />
+        <input type="submit" value="작성"/>
+    </form>
+</body>
+</html>
