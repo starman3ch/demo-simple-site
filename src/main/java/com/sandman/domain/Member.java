@@ -1,5 +1,6 @@
 package com.sandman.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ public class Member {
     @Column(name = "member_id", nullable = false)
     private String memberId;
 
+    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
 
