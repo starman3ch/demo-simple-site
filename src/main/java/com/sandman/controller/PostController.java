@@ -21,6 +21,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.List;
+
 
 /**
  * Created by lch131 on 2017. 4. 18..
@@ -41,7 +43,7 @@ public class PostController {
     }
 
     // ----------- Posts list -------------
-    @RequestMapping(method = RequestMethod.GET)
+/*    @RequestMapping(method = RequestMethod.GET)
     public String listPosts(@PageableDefault Pageable pageable, Model model) {
         logger.info("Fetching Posts ");
         Page<Post> posts = postService.findAllPosts(pageable);
@@ -53,19 +55,28 @@ public class PostController {
 
         model.addAttribute("posts", posts);
         return "posts/list";
+    }*/
+    @RequestMapping(method = RequestMethod.GET)
+    public String listPosts(Model model) {
+        logger.info("Fetching Posts ");
+        List<Post> posts = postService.findAllPosts();
+        model.addAttribute("posts", posts);
+        return "posts/list";
     }
+
 
 
     // ----------- Post Detail -------------
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getPost(@PathVariable("id") long key) {
-        logger.info("Fetching Post with id {}", key);
-        Post post = postService.findByKey(key);
-        if (post == null) {
-            logger.error("Post with id {} not found.", key);
-            return new ResponseEntity(new PostErrorType("Post with id " + key + " not found"), HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<Post>(post, HttpStatus.OK);
+    public String getPost(@PathVariable("id") int id, Model model) {
+        logger.info("Fetching Post with id {}", id);
+        Post post = postService.findPost(id);
+//        if (post == null) {
+//            logger.error("Post with id {} not found.", id);
+//            return new ResponseEntity(new PostErrorType("Post with id " + id + " not found"), HttpStatus.NOT_FOUND);
+//        }
+        model.addAttribute("post", post);
+        return "post";
     }
 
 
@@ -75,7 +86,7 @@ public class PostController {
     public String writePost(@Validated PostForm form, BindingResult result, Model model) {
         logger.info("Creating Post");
         if (result.hasErrors()) {
-//            return listPosts(model);
+            logger.warn("has error");
             return "redirect:/posts";
         }
 
@@ -84,33 +95,31 @@ public class PostController {
 
         postService.savePost(post);
 
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setLocation(ucBuilder.path("/posts/{id}").buildAndExpand(post.getPostKey()).toUri());
-//        return new ResponseEntity<String>(headers, HttpStatus.CREATED);
-        return "redirect:/posts";
+        model.addAttribute("post", post);
+        return "post";
     }
 
 
 
     // ----------- Edit Post -------------
     @RequestMapping(value = "edit", params = "form", method = RequestMethod.GET)
-    public String editForm(@RequestParam long key, PostForm form) {
-        logger.info("Updating Post with id {}", key);
+    public String editForm(@RequestParam int id, PostForm form) {
+        logger.info("Updating Post with id {}", id);
 
-        Post post = postService.findByKey(key);
+        Post post = postService.findPost(id);
         BeanUtils.copyProperties(form, post);
         return "posts/edit";
     }
 
     @RequestMapping(value = "edit", method = RequestMethod.POST)
-    public String edit(@RequestParam long key, @Validated PostForm form, BindingResult result) {
+    public String edit(@RequestParam int id, @Validated PostForm form, BindingResult result) {
         if (result.hasErrors()) {
-            return editForm(key, form);
+            return editForm(id, form);
         }
 
         Post post = new Post();
         BeanUtils.copyProperties(form, post);
-        post.setPostKey(key);
+        post.setPostId(id);
         postService.updatePost(post);
         return "redirect:/posts";
     }
@@ -124,15 +133,15 @@ public class PostController {
 
     // ----------- Delete Post -------------
     @RequestMapping(value = "delete", method = RequestMethod.POST)
-    public String delete(@RequestParam long key) {
-        logger.info("Deleting Post with id {}", key);
+    public String delete(@RequestParam int id) {
+        logger.info("Deleting Post with id {}", id);
 
 //        Post post = postService.findByKey(key);
 //        if (post == null) {
 //            logger.error("Unable to delete. Post with id {} not found.", key);
 //            return new ResponseEntity(new PostErrorType("Unable to delete. Post with id " + key + " not found."), HttpStatus.NOT_FOUND);
 //        }
-        postService.deletePostByKey(key);
+        postService.deletePost(id);
         return "redirect:/posts";
     }
 }

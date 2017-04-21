@@ -16,5 +16,5 @@ public class PostForm {
 
     @NotNull
     @Size(min = 1)
-    private String postBody;
+    private String content;
 }

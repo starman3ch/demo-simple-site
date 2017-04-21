@@ -1,7 +1,10 @@
 package com.sandman.service;
 
+import com.sandman.controller.PostRestController;
 import com.sandman.domain.Post;
 import com.sandman.repository.PostRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,14 +24,20 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private PostRepository postRepository;
 
+//    @Override
+//    public Page<Post> findAllPosts(Pageable pageable) {
+//        return postRepository.findAll(pageable);
+//    }
+
+
     @Override
-    public Page<Post> findAllPosts(Pageable pageable) {
-        return postRepository.findAll(pageable);
+    public List<Post> findAllPosts() {
+        return postRepository.findAll();
     }
 
     @Override
-    public Post findByKey(long postKey) {
-        return postRepository.findOne(postKey);
+    public Post findPost(int postId) {
+        return postRepository.findOne(postId);
     }
 
     @Override
@@ -42,7 +51,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePostByKey(long postKey) {
-        postRepository.delete(postKey);
+    public void deletePost(int postId) {
+        postRepository.delete(postId);
     }
 }
